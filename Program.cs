@@ -6,7 +6,7 @@ namespace A01_CRIPTOGRAFIA
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Vols encriptar o desencriptar? (E/D)");
+            Console.WriteLine("Vols encriptar o desencriptar? (E/D).");
             string opcio = Console.ReadLine().ToUpper();
 
             Console.Write("Introdueix la paraula clau: ");
