@@ -6,20 +6,36 @@ namespace A01_CRIPTOGRAFIA
     {
         static void Main(string[] args)
         {
-            string paraulaClau = "Marc";
-            int m = 2;
-            string missatge = "Jose Mourinho";
-            string missatgeEncriptat = Encriptacio(m, paraulaClau, missatge);
-            Console.WriteLine(missatgeEncriptat);
+            Console.WriteLine("Vols encriptar o desencriptar? (E/D)");
+            string opcio = Console.ReadLine().ToUpper();
+
+            Console.Write("Introdueix la paraula clau: ");
+            string paraulaClau = Console.ReadLine();
+            Console.Write("Introdueix el missatge: ");
+            string missatge = Console.ReadLine();
+
+            if (opcio == "E")
+            {
+                string missatgeEncriptat = Encriptacio(paraulaClau, missatge);
+                Console.WriteLine($"Missatge encriptat: {missatgeEncriptat}");
+            }
+            else if (opcio == "D")
+            {
+                string missatgeDesencriptat = Desencriptar(paraulaClau, missatge);
+                Console.WriteLine($"Missatge desencriptat: {missatgeDesencriptat}");
+            }
+            else
+            {
+                Console.WriteLine("Opció no vàlida.");
+            }
         }
 
-        public static string Encriptacio(int m, string paraulaClau, string missatge)
+        public static string Encriptacio(string paraulaClau, string missatge)
         {
             paraulaClau = paraulaClau.ToLower();
             missatge = missatge.Replace(" ", "");
-            m = missatge.Length / paraulaClau.Length;
+            int m = missatge.Length / paraulaClau.Length;
             char[,] matriu = new char[m, paraulaClau.Length];
-            int[] clau = new int[paraulaClau.Length];
             char[] msgSeparat = new char[missatge.Length];
             for (int i = 0; i < missatge.Length; i++)
             {
@@ -54,6 +70,50 @@ namespace A01_CRIPTOGRAFIA
                 }
             }
             return missatgeEncriptat;
+        }
+
+        public static string Desencriptar(string paraulaClau, string missatge)
+        {
+            paraulaClau = paraulaClau.ToLower();
+            int m = (int)Math.Ceiling((double)missatge.Length / paraulaClau.Length);
+            char[,] matriu = new char[m, paraulaClau.Length];
+            int[] ordenat = new int[paraulaClau.Length];
+            char[] clauAmbIndex = new char[paraulaClau.Length];
+
+            for (int i = 0; i < paraulaClau.Length; i++)
+            {
+                clauAmbIndex[i] = paraulaClau[i];
+                ordenat[i] = i; 
+            }
+
+            Array.Sort(clauAmbIndex, ordenat, 0, paraulaClau.Length);
+
+            int index = 0;
+            foreach (int col in ordenat)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (index < missatge.Length)
+                    {
+                        matriu[j, col] = missatge[index];
+                        index++;
+                    }
+                }
+            }
+
+            string missatgeDesencriptat = "";
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < paraulaClau.Length; j++)
+                {
+                    if (matriu[i, j] != '\0')
+                    {
+                        missatgeDesencriptat += matriu[i, j];
+                    }
+                }
+            }
+
+            return missatgeDesencriptat;
         }
     }
 }
